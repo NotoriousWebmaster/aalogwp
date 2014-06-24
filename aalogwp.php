@@ -3,7 +3,7 @@
 Plugin Name: aaLog
 Plugin URI: http://notoriouswebmaster.com/
 Description: Allows logging data to a logfile.
-Version: 1.0.0
+Version: 1.0.1
 Author: A. Alfred Ayache
 Copyright: 2014, The Last Byte, inc.
 
@@ -25,8 +25,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 class aalogwp_loader {
-
-	const PLUGIN_DIR = '';
 
 	var $msgs;
 
@@ -59,14 +57,24 @@ class aalogwp_loader {
 			$this->msgs['upd'][] = 'A new cookie has been generated for aaLog, and logging must be set to On.';
 		}
 
-		include_once plugin_dir_path( __FILE__ ) . self::PLUGIN_DIR . 'aalog.php';
+		include_once plugin_dir_path( __FILE__ ) . 'aalog.php';
 
-		$logdir = plugin_dir_path( __FILE__ ) . self::PLUGIN_DIR . 'logs/';
+		$logdir = wp_upload_dir();
+		$logdir = $logdir['basedir'] . '/aalogwp/';
+
+		// does the directory exist?
+		if (!is_dir($logdir)) {
+			// create directory
+			$bDir = mkdir($logdir, 0757, true);
+			if (!$bDir) {
+				$this->msgs['err'][] = "Could not create directory {$logdir}. Please check permissions.";
+			}
+		}
+
 		$oLog = new aaLog($logdir . $logfileName . '.log', $aalog_cookie);
 		if (!$oLog->isReady) {
 			$this->msgs['err'][] = "Plugin aaLogWP couldn't write to the log directory {$logdir}. Probably a permissions issue.";
 		}
-
 
 		// process options
 		if ($_GET['page'] == 'aalogwp_settings') { 
@@ -152,7 +160,7 @@ class aalogwp_loader {
 
 	function menu_page() {
 
-		include plugin_dir_path( __FILE__ ) . self::PLUGIN_DIR . 'aalogwp_options_page.php';
+		include plugin_dir_path( __FILE__ ) . 'aalogwp_options_page.php';
 	}
 }
 
