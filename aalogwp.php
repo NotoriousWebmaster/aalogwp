@@ -77,7 +77,7 @@ class aalogwp_loader {
 		}
 
 		// process options
-		if ($_GET['page'] == 'aalogwp_settings') { 
+		if (isset($_GET['page']) && $_GET['page'] == 'aalogwp_settings') { 
 			if (isset($_POST['submit'])) {
 				if ($_POST['setcookie'] == 'set') {
 					$oLog->setCookie();

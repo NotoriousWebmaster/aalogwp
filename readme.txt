@@ -1,5 +1,5 @@
 === aaLogWP ===
-Contributors: notorioushttp
+Contributors: notorioushttp, oreolek
 Tags: logging, benchmarking
 Requires at least: 3.0
 Tested up to: 3.6.2
